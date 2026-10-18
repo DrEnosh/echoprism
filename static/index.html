@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoPrism | Information Overload Eliminator for PR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 px-6 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+              EchoPrism
+            </h1>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+              PR & Intelligence
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Information Overload Eliminator &bull; Signal Over Noise</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="btn-api-settings" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/60 transition-all">
+          <i data-lucide="key" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span id="api-status-badge">API: Gemini 3.8 Flash (Active)</span>
+        </button>
+
+        <button id="btn-copy-brief" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/20 transition-all">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Copy PR Brief</span>
+        </button>
+
+        <button id="btn-export-html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span>HTML Report</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-6 space-y-6">
+
+    <!-- Metrics Overview Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 relative overflow-hidden backdrop-blur-sm">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Raw Ingested</span>
+          <i data-lucide="newspaper" class="w-4 h-4 text-slate-500"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-white" id="metric-ingested">0</div>
+        <div class="text-[11px] text-slate-400 mt-1">Articles & press releases</div>
+        <div class="absolute bottom-0 left-0 h-1 w-full bg-slate-800"></div>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 relative overflow-hidden backdrop-blur-sm">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Core Developments</span>
+          <i data-lucide="target" class="w-4 h-4 text-cyan-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-cyan-400" id="metric-developments">0</div>
+        <div class="text-[11px] text-slate-400 mt-1">Distinct high-signal stories</div>
+        <div class="absolute bottom-0 left-0 h-1 w-full bg-cyan-500/50"></div>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 relative overflow-hidden backdrop-blur-sm">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Noise Eliminated</span>
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-emerald-400" id="metric-noise">0%</div>
+        <div class="text-[11px] text-slate-400 mt-1" id="metric-duplicates">0 redundant syndications purged</div>
+        <div class="absolute bottom-0 left-0 h-1 w-full bg-emerald-500/50"></div>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 relative overflow-hidden backdrop-blur-sm">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Reading Time Saved</span>
+          <i data-lucide="clock" class="w-4 h-4 text-indigo-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-indigo-400" id="metric-time">0m</div>
+        <div class="text-[11px] text-slate-400 mt-1">Reduced to ~2 min executive read</div>
+        <div class="absolute bottom-0 left-0 h-1 w-full bg-indigo-500/50"></div>
+      </div>
+    </div>
+
+    <!-- Data Ingestion Section -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="file-input" class="w-4 h-4 text-cyan-400"></i>
+            Step 1: Choose Ingestion Source
+          </h2>
+          <p class="text-xs text-slate-400">Load authentic PR presets, paste live URLs, query live RSS/News feeds, or drop newsletter text.</p>
+        </div>
+        
+        <!-- Tab Buttons -->
+        <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          <button data-tab="presets" class="tab-btn px-3 py-1.5 rounded-lg active bg-slate-800 text-white transition-all">
+            Curated Presets
+          </button>
+          <button data-tab="urls" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">
+            Article URLs
+          </button>
+          <button data-tab="rss" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">
+            Live RSS / Topic
+          </button>
+          <button data-tab="raw" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">
+            Paste Text
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="pt-4">
+        <!-- Preset Tab -->
+        <div id="tab-presets" class="tab-pane block">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="preset-container">
+            <!-- Dynamically populated presets -->
+          </div>
+        </div>
+
+        <!-- URLs Tab -->
+        <div id="tab-urls" class="tab-pane hidden space-y-3">
+          <label class="block text-xs font-medium text-slate-400">Paste one or multiple article URLs (one per line):</label>
+          <textarea id="input-urls" rows="4" placeholder="https://techcrunch.com/article...&#10;https://reuters.com/business...&#10;https://bloomberg.com/news..." 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono"></textarea>
+          <button id="btn-fetch-urls" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold flex items-center gap-2">
+            <i data-lucide="download-cloud" class="w-4 h-4"></i> Ingest URLs
+          </button>
+        </div>
+
+        <!-- RSS Tab -->
+        <div id="tab-rss" class="tab-pane hidden space-y-3">
+          <label class="block text-xs font-medium text-slate-400">Search industry topic (via Google News RSS) or enter a direct RSS feed URL:</label>
+          <div class="flex gap-2">
+            <input id="input-rss" type="text" placeholder="e.g., 'OpenAI PR' or 'Apple Antitrust' or 'https://techcrunch.com/feed/'"
+              class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono">
+            <button id="btn-fetch-rss" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold flex items-center gap-2">
+              <i data-lucide="radio" class="w-4 h-4"></i> Fetch News Feed
+            </button>
+          </div>
+        </div>
+
+        <!-- Raw Text Tab -->
+        <div id="tab-raw" class="tab-pane hidden space-y-3">
+          <label class="block text-xs font-medium text-slate-400">Paste raw email newsletter, PR digest, or multi-article dump (separated by '---' or headings):</label>
+          <textarea id="input-raw" rows="5" placeholder="Paste newsletter items here..." 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono"></textarea>
+          <button id="btn-fetch-raw" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold flex items-center gap-2">
+            <i data-lucide="file-text" class="w-4 h-4"></i> Parse Text Articles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyword Filter & Process Controls -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="flex-1 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="filter" class="w-3.5 h-3.5 text-cyan-400"></i>
+            Step 2: Filter by Topics or Keywords
+          </span>
+          <span class="text-[11px] text-slate-500" id="filter-status-text">Click chips to toggle filters</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5" id="keyword-chips-container">
+          <!-- Dynamically populated chips -->
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <button id="btn-process-now" class="w-full md:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-sm font-extrabold shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          Eliminate Overload & Generate Brief
+        </button>
+      </div>
+    </div>
+
+    <!-- View Mode Switcher & Signal Filter -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Signal Priority:</span>
+        <div class="inline-flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <button data-signal="ALL" class="signal-btn px-2.5 py-1 rounded-lg active bg-slate-800 text-white">All</button>
+          <button data-signal="HIGH" class="signal-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-red-400"></span> High Signal
+          </button>
+          <button data-signal="MEDIUM" class="signal-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Medium
+          </button>
+          <button data-signal="LOW" class="signal-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Routine / Fluff
+          </button>
+        </div>
+      </div>
+
+      <!-- View tabs -->
+      <div class="inline-flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+        <button data-view="briefing" class="view-btn px-3 py-1 rounded-lg active bg-slate-800 text-white flex items-center gap-1.5">
+          <i data-lucide="file-check" class="w-3.5 h-3.5 text-cyan-400"></i> Executive Briefing
+        </button>
+        <button data-view="matrix" class="view-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5">
+          <i data-lucide="git-merge" class="w-3.5 h-3.5 text-indigo-400"></i> Cluster Tree & Deduplication
+        </button>
+        <button data-view="raw" class="view-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5">
+          <i data-lucide="database" class="w-3.5 h-3.5 text-slate-400"></i> Ingested Articles (<span id="raw-count-tag">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Presentation Panels -->
+    <div id="briefings-container" class="space-y-4">
+      <!-- Loading indicator or briefing cards populated via JS -->
+      <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+        <i data-lucide="sparkles" class="w-8 h-8 text-cyan-400 mx-auto mb-3 animate-pulse"></i>
+        <h3 class="text-sm font-semibold text-slate-200">Ready to synthesize intelligence</h3>
+        <p class="text-xs text-slate-500 mt-1">Select a curated PR preset above or ingest your own URLs/RSS feed to begin.</p>
+      </div>
+    </div>
+
+    <!-- Matrix View (Hidden by default) -->
+    <div id="matrix-container" class="hidden space-y-4">
+      <!-- Clustered tree graph & deduplication breakdown -->
+    </div>
+
+    <!-- Raw Articles View (Hidden by default) -->
+    <div id="raw-container" class="hidden space-y-3">
+      <!-- List of raw items -->
+    </div>
+
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4 text-cyan-400"></i>
+          Intelligence Engine Settings
+        </h3>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Google Gemini API Key (Optional)</label>
+          <input type="password" id="input-api-key" placeholder="AIzaSy... (leave blank to use built-in Local NLP)"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:border-cyan-500 focus:outline-none">
+          <p class="text-[11px] text-slate-500 mt-1">
+            When provided, uses <strong>Gemini 3.8 Flash</strong> for nuanced PR framing and executive takeaways. When blank, uses the high-precision <strong>Local NLP Engine</strong>.
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">AI Model</label>
+          <select id="select-model" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-slate-200 focus:border-cyan-500 focus:outline-none">
+            <option value="gemini-3.8-flash">gemini-3.8-flash (Recommended)</option>
+            <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (Fast)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Deduplication Aggressiveness</label>
+          <div class="flex items-center gap-3">
+            <input type="range" id="slider-threshold" min="0.04" max="0.20" step="0.01" value="0.08" class="flex-1 accent-cyan-500">
+            <span id="threshold-val" class="font-mono text-cyan-400 font-bold">0.08</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">Lower values group broader industry topics; higher values keep distinct sub-events separate.</p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button id="btn-save-settings" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 border border-slate-700 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-msg">Copied to clipboard!</span>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
