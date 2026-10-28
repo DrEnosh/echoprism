@@ -1,102 +1,76 @@
-# EchoPrism ⚡ Information Overload Eliminator
-### Category: RESEARCH & LEARNING | PR & Corporate Communications Intelligence
+# EchoPrism
 
-> **The Problem:** Important industry developments are buried under repetitive articles, syndicated press releases, newsletter clutter, and media echo chambers. Reading 30 outlets covering the exact same event wastes hours and causes acute cognitive overload.
->
-> **The Solution:** **EchoPrism** is an intelligent news briefing and media intelligence platform that ingests multi-source coverage, groups stories discussing the same underlying development, purges duplicate and syndicated wire copy, and synthesizes executive PR briefings with verified source links.
+A news briefing tool for PR and corporate communications teams. It pulls in coverage from many outlets, groups the articles that are about the same event, drops syndicated copies, and writes one short brief per development with links back to the sources.
 
----
+Built for the *Research & Learning / PR & Corporate Communications Intelligence* category.
 
-## 🌟 Key Features
+## The problem
 
-1. **Intelligent Story Clustering**:
-   - Uses hybrid semantic vectorization (TF-IDF + Title n-grams + Entity / Proper Noun overlap) to group disparate articles discussing the same real-world development.
-   - Automatically identifies the **Primary Story Anchor** (e.g. original press wire or in-depth investigative scoop).
+When something happens in an industry, thirty outlets cover it and most of them repeat the same press release or wire story. Reading all of it takes hours and tells you very little more than the first article did. EchoPrism cuts that down to the distinct developments and what each one means for communications.
 
-2. **Syndicated Duplicate & Noise Purging**:
-   - Detects near-verbatim republishing across wire syndicates, automated bots, and content aggregators.
-   - Quantifies **Noise Elimination Metrics**:
-     - *Articles Analyzed vs. Core Developments Identified*
-     - *% Redundant Noise Eliminated* (e.g., 85% noise reduction)
-     - *Executive Reading Time Saved* (e.g., 47 minutes saved down to a 2-minute brief).
+## What it does
 
-3. **Executive PR Briefing & Signal Synthesis**:
-   - Powered by **Google Gemini 3.8 Flash** (`gemini-3.8-flash`) via the modern `google-genai` SDK.
-   - **Zero-Config Local NLP Engine Fallback**: Works offline out-of-the-box without requiring an API key.
-   - For every clustered development:
-     - 🔴 / 🟡 / 🟢 **Signal Level & Materiality Rationale** (High/Medium/Low impact ranking).
-     - **Executive TL;DR**: 2-sentence crisp takeaway.
-     - **What Happened**: Objective timeline of verified facts.
-     - **Why It Matters (PR & Strategy)**: Reputational, messaging, and competitive ramifications.
-     - **Cross-Outlet Framing Analysis**: Direct comparison of how company PR spin vs. tech press vs. financial media framed the story.
-     - **Key Quotes & Spokespeople**: Extracted pull quotes with attribution.
-     - **Actionable PR Takeaway**: Concrete comms recommendation.
-     - **Verified Source Links**: Direct clickable links with publication name and timestamp.
+- **Story clustering.** Articles are grouped with TF-IDF, title n-grams and overlap of proper nouns and entities. The earliest or most detailed piece in each group is picked as the main story.
+- **Duplicate and syndication removal.** Near-identical republished copies are flagged, and the app reports how many articles it analysed, how many distinct developments it found, the share of redundant coverage removed, and the reading time saved.
+- **Briefs per development.** Each cluster gets a signal level (high, medium or low) with a short reason, a two-sentence summary, what happened, why it matters for PR and strategy, how different outlet types framed the story, key quotes with attribution, one suggested comms action, and source links with outlet name and time.
+- **Several ways to bring in articles.** Three built-in sample sets (a tech and AI news wave, a corporate crisis, a biotech acquisition), a list of article URLs, a search keyword or RSS feed (Google News RSS), or pasted newsletter text.
+- **Export.** Copy a Markdown brief for Slack, Teams, Notion or email, or download a styled HTML report.
+- **Works without an API key.** With a Gemini key the briefs are written by the model. Without one, a built-in rule-based summarizer is used.
 
-4. **Multi-Source Ingestion**:
-   - **Curated Real-World Presets**:
-     - *Tech & AI Ecosystem Wave* (20 articles covering frontier models, semiconductor export bans, publisher copyright suits).
-     - *Corporate Crisis Comms* (10 articles covering global cloud authentication outage & executive resignation).
-     - *Biotech & Pharma M&A* (5 articles covering a $14B oncology acquisition).
-   - **Live URL Ingestion**: Paste any list of article URLs; scrapes and cleans article text automatically.
-   - **Live RSS & Search**: Enter any search keyword (via Google News RSS) or custom RSS feed URL.
-   - **Raw Text / Newsletter Parsing**: Paste email newsletters, Substack posts, or multi-article text dumps.
+## Getting started
 
-5. **Multi-Format Export**:
-   - One-click copy formatted Markdown brief to clipboard (ready for Slack, Teams, Notion, or internal email).
-   - Download standalone, styled executive HTML report.
+You need a recent Python 3.
 
----
-
-## 🚀 Quickstart
-
-### 1. Launch the Modern Web Application (Recommended)
-From the project folder, run:
 ```bash
+pip install -r requirements.txt
 python run.py
 ```
-This automatically starts the local FastAPI server and opens your browser at `http://localhost:8000`.
 
-### 2. Launch the Streamlit Dashboard (Alternative)
-If you prefer a Streamlit data app experience:
+This starts the FastAPI server and opens `http://localhost:8000`.
+
+To use the Streamlit version instead:
+
 ```bash
 streamlit run streamlit_app.py
-```
-or:
-```bash
+# or
 python run.py --streamlit
 ```
 
----
+### Gemini API key (optional)
 
-## 📁 Project Architecture
+Set `GEMINI_API_KEY` in your environment or in a local `.env` file, or paste the key into the API Settings dialog in the web UI (it stays in your browser's local storage). The default model is set in `core/config.py`.
+
+## Project structure
 
 ```
-c:\Users\enosh\Desktop\AI for PR\
-├── app.py                  # FastAPI application backend and REST endpoints
-├── streamlit_app.py        # Interactive Streamlit dashboard
-├── run.py                  # One-command browser launcher
-├── requirements.txt        # Python dependency manifest
-├── README.md               # Product documentation & guide
-│
-├── core/
-│   ├── config.py           # Configuration, models, and thresholds
-│   ├── datasets.py         # Curated realistic multi-outlet PR news waves
-│   ├── ingestion.py        # URL scraper, RSS feed reader & text parser
-│   ├── clustering.py       # Hybrid TF-IDF + Entity clustering & deduplication engine
-│   ├── summarizer.py       # Gemini 3.8 Flash & Local NLP synthesis engine
-│   └── export.py           # Markdown & styled HTML report generators
-│
-└── static/
-    ├── index.html          # Modern, responsive UI with Tailwind & Lucide icons
-    ├── style.css           # Glassmorphism styling and custom animations
-    └── app.js              # Client state management, filtering & reactive views
+app.py              FastAPI backend and REST endpoints
+streamlit_app.py    Streamlit dashboard
+run.py              Starts the server and opens the browser
+requirements.txt
+core/
+  config.py         Model name, thresholds, PR boilerplate patterns
+  datasets.py       Sample multi-outlet news sets
+  ingestion.py      URL scraper, RSS reader, text parser
+  clustering.py     TF-IDF and entity clustering, duplicate detection
+  summarizer.py     Gemini and rule-based brief writer
+  export.py         Markdown and HTML report generators
+static/
+  index.html        Web UI (Tailwind, Lucide icons)
+  style.css
+  app.js
 ```
 
----
+## API
 
-## 🔑 AI Configuration
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/presets`, `GET /api/presets/{id}` | List and load the sample sets |
+| `POST /api/ingest/urls` | Fetch and clean articles from URLs |
+| `POST /api/ingest/rss` | Read an RSS feed or run a news search |
+| `POST /api/ingest/raw` | Parse pasted text |
+| `POST /api/process` | Cluster, de-duplicate and write briefs |
+| `POST /api/export/markdown`, `POST /api/export/html` | Export the result |
 
-- **Default Model:** `gemini-3.8-flash`
-- **API Key:** Can be set in your environment as `GEMINI_API_KEY`, or entered directly in the UI via the **API Settings** modal in the header (stored securely in your local browser storage).
-- **Offline / Local Mode:** If no API key is provided, EchoPrism seamlessly falls back to its built-in rule-based NLP engine, ensuring 100% functionality without any external dependencies or costs.
+## License
+
+See [LICENSE](LICENSE).
